@@ -12,6 +12,17 @@ import java.util.List;
 @RestController
 public class CourseController {
 
+    static List<Course> courseList = new ArrayList<>();
+    static
+    {
+        courseList.add(new Course("U23CS401","DSA",4));
+        courseList.add(new Course("U23CS402","CC",3));
+        courseList.add(new Course("U23CS403","SE",2));
+        courseList.add(new Course("U23CS404","OOPs",4));
+        courseList.add(new Course("U23CS405","PSC",3));
+    }
+
+
     @GetMapping("course")
     public ResponseEntity<Course> getCourse()
     {
@@ -44,7 +55,7 @@ public class CourseController {
         System.out.println(course.getCourseCode());
         System.out.println(course.getCourseName());
         System.out.println(course.getCredits());
-
+        courseList.add(course);
         return ResponseEntity.ok(course);
     }
 
@@ -55,8 +66,11 @@ public class CourseController {
 
         return ResponseEntity.accepted().body(course);
     }
-
-
+    @GetMapping("courses/getCourses/{courseCode}")
+    public ResponseEntity<Course> getCourse(@PathVariable String courseCode)
+    {
+        return courseList.stream().filter(c -> c.getCourseCode() .equalsIgnoreCase(courseCode)).findFirst().map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+    }
 
 
 
